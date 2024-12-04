@@ -1,0 +1,556 @@
+Dim longTouchTime = 3000
+
+Function 随机延迟
+    Dim value,maxNum=2000,minNum=1000
+    Randomize  
+    value = Int((maxNum - minNum + 1) * Rnd() + minNum)
+    Delay value
+    TracePrint "随机延迟" & value
+End Function
+
+Function 随机数(minNum,maxNum)
+    Randomize  
+    Dim value = Int((maxNum - minNum + 1) * Rnd() + minNum)
+    TracePrint "随机数" & value
+    随机数 = value
+End Function
+
+Function PrintLog(str, isBlod)
+
+	If isBlod Then 	  
+        TracePrint "【" & str & "】"
+	Else 
+		//TracePrint str
+	End If	
+End Function
+
+
+' ===============================UI======================================
+
+Function 读取UI配置
+    dim type = ReadUIConfig("自动功能列表")
+    If type = 0 then
+        ShowMessage "当前选的区服是1区"
+    ElseIf type = 1 then
+        ShowMessage "当前选的区服是2区"
+    ElseIf type = 2 then
+        ShowMessage "当前选的区服是3区"
+    End if
+End Function
+
+Function 点击自动寻路
+    ' 支线任务
+    If CmpColorEx("518|888|A7B3CC,532|909|696D7A,511|935|FCE6BE,519|965|F4FAFD",0.9) = 1 Then
+    ElseIf CmpColorEx("520|905|696D7A,510|925|FFE7BE,565|934|A8B3CB,472|935|A8B4CD,518|887|A7B3CC",0.9) = 1 Then
+    ElseIf CmpColorEx("518|887|A7B3CC,471|934|A8B4CD,565|934|A8B3CB", 0.9) = 1 Then
+    ElseIf CmpColorEx("518|908|686D7A,517|887|A7B3CC,471|935|A8B4CD,519|921|4BAAFF,519|932|49A8FF",0.8) = 1 Then
+    Else 
+        PrintLog("没有自动寻路",False)
+        Exit Function
+    End If
+
+    Tap 516, 926
+    随机延迟
+    PrintLog("点击自动寻路",True)
+End Function
+
+Function 点击空白
+    
+    Delay 200
+    Tap 475,100
+End Function
+
+
+Function 勾选七天不提醒
+    Dim intX,intY
+    FindMultiColor 34,365,231,463,"ECEDF3","11|7|ECEDF3,32|-6|A3B0D0,34|-6|A3B0D0,40|-1|99A6C4,45|-1|A3B0D0,45|-6|A0ADCD",0,0.9,intX,intY
+    If intX > -1 And intY > -1 Then
+        tap 61,394
+        PrintLog("勾选七天不提醒",True)
+        随机延迟
+    End If
+End Function
+
+
+
+Function 点击勾按钮
+    // 随机延迟 
+    Dim intX,intY
+    FindMultiColor 0,0,0,0,"5B9B66-101010","24|-20|6CAA68-101010,25|12|F4FAFD-101010,-19|16|60CCF9-101010,1|39|F5FAFD-101010",0,0.9,intX,intY
+    If intX > -1 And intY > -1 Then 
+        勾选七天不提醒
+
+        Tap intX, intY
+        点击勾按钮 = True
+        PrintLog("识别到√按钮",True)
+        随机延迟
+    Else 
+        PrintLog("识别到√按钮",False)
+        点击勾按钮 = False
+    End If
+   
+End Function
+
+Function 识别长按按钮
+	
+	Dim intX,intY    
+    FindColor 436, 858, 593, 1035, "FFFFFF|FFFFFF|41C0F9|FFFFFF|FEFFFF|FFFFFF", 0, 0.9, intX, intY
+    
+	If false Then
+        //长按屏幕
+        Touch 360, 816, longTouchTime		
+        PrintLog "长按按钮",True
+        随机延迟 
+    ElseIf CmpColorEx("359|766|2B8BCC,353|783|41C0F9,362|817|FFFFFF,358|847|41C0F9,359|871|2B8BCB",0.9) = 1 Then
+		 //长按屏幕
+        Touch 360,816, longTouchTime		
+        PrintLog "长按按钮2",True
+        随机延迟
+    Else 
+        PrintLog "长按按钮",False
+    End If
+End Function
+
+Function 识别点击对话
+
+   	Dim intX,intY
+    ' FindMultiColor 3,497,706,733,"354765","5|17|53C6F8,17|15|53C5F8,294|3|E9F5FA,600|59|6D93C1",0,0.9,intX,intY
+    FindMultiColor 1,688,717,1211,"001632","-10|43|E4A86A,-2|39|FEE6BD,-5|32|E57300,48|41|F4FAFD,620|35|F4FAFD",0,0.9,intX,intY
+    
+    If intX > -1 And intY > -1 Then
+        Tap intX, intY
+        PrintLog "点击对话", True     
+        随机延迟 
+    ElseIf CmpColorEx("189|950|F4FAFD,554|945|F4FAFD,152|993|F4FAFD,591|991|F4FAFD,266|1081|9EA8C1",0.9) = 1 Then
+        Tap 189, 950
+        随机延迟 
+        PrintLog "点击对话2", True    
+    Else
+        PrintLog "点击对话",False
+    End If
+End Function
+
+
+//Function 
+
+
+Function 跳过按钮
+    //随机延迟
+    Dim intX,intY
+    FindMultiColor 456,800,717,1275,"585663","24|39|E5EBF2,5|47|E9F1F8,-15|40|585865",0,0.95,intX,intY
+    If intX > -1 And intY > -1 Then 
+        Tap intX, intY
+        PrintLog "跳过按钮",true
+        跳过按钮 = True
+        随机延迟 
+        //--------
+        识别点击对话
+    Else
+        PrintLog "跳过按钮",false
+        跳过按钮 = False        
+    End If
+End Function
+
+Function 点击交互按钮
+    //随机延迟
+    If CmpColorEx("359|760|A7B2CB,301|819|A7B3CC,417|819|A7B3CC,359|876|A8B3CC", 0.9) = 1 Then 
+    	//排除对话交互
+        If CmpColorEx("362|782|EEF5F9,363|805|4D4D5D,348|811|EEF5F9,346|833|676178",0.8) = 1 Then
+            PrintLog "点击交互按钮",true
+        Else
+            Tap 368, 821
+        End If
+        
+        随机延迟
+    Else
+        PrintLog "点击交互按钮",false
+    End If
+End Function
+
+Function 开启2倍速和自动释放技能
+    ' 2倍速:这里是反向识别，如果识别不到2倍速按钮，则点击开启
+    If CmpColorEx("588|989|4C77C2,599|997|70EBF9,608|1005|FFFFFF,591|1014|FFFFFF,600|1026|4E73B9,606|1015|FFFFFF",0.9) = 1 Then
+    Else
+        Tap 596,1005
+        PrintLog "开启2倍速",True
+    End If
+    ' 自动释放技能:这里是反向识别，如果识别不到自动释放技能按钮，则点击开启
+    If CmpColorEx("660|996|6DECFB,667|1012|FFFFFF,678|991|4E79C4,684|1008|FFFFFF,682|1017|FFFFFF,662|1026|4B71B7",0.9) = 1 Then
+    Else
+        Tap 669,1004
+        PrintLog "开启自动释放技能",True
+    End If
+
+End Function
+
+Function 点击战斗按钮
+    Dim intX,intY
+    FindMultiColor 6,1126,716,1256,"F7FCFD","12|-1|F7FCFD,2|16|F7FCFD,-8|17|F7FCFD,12|21|F7FCFD",0,0.98,intX,intY
+    If intX > -1 And intY > -1 Then
+    ElseIf CmpColorEx("399|1185|F7FCFD,392|1200|F7FCFD,411|1198|F7FCFD,444|1186|F7FCFD,437|1184|F7FCFD,432|1193|F7FCFD",0.95) = 1 Then
+    ElseIf CmpColorEx("528|1163|5B9B66,625|1163|4FB461,606|1180|4DB063,589|1199|F7FCFD,588|1217|66B24D,636|1231|66B34E",0.9) = 1 Then
+    Else 
+        点击战斗按钮 = False
+        PrintLog "点击战斗按钮",false
+        Exit Function
+    End If
+
+    Tap 601,1195
+    点击战斗按钮 = True
+    PrintLog "点击战斗按钮",true
+
+    For 20
+        PrintLog("战斗中....",true)
+        Delay 5000
+
+        开启2倍速和自动释放技能
+
+        dim isSucceed = 战斗胜利()
+        If isSucceed Then 
+            Exit For
+        End If
+
+
+    Next
+
+End Function
+
+Function 识别社交动作
+    Dim intX,intY
+    //主界面识别
+    FindMultiColor 3,832,111,1019,"8DD9F2-101010","40|40|8DD8F1-101010,3|0|8DD9F2-101010,-7|60|8ED7F0-101010,314|-72|FFFFFF-101010,287|-78|41C0F9-101010",0,0.9,intX,intY
+    If intX > -1 And intY > -1 Then
+        PrintLog "识别社交动作",true
+        Tap intX, intY
+        随机延迟
+        //社交动作页面识别
+        FindMultiColor 20,954,693,1214,"CA7C47","11|0|FDE8BF,16|0|FEE9BE,9|3|E5750F",0,0.9,intX,intY
+        If intX > -1 And intY > -1 Then
+            Tap intX, intY
+            PrintLog "识别社交动作2",true
+        End If
+    End If
+End Function
+
+
+Function 任务完成
+	Dim intX,intY
+	FindMultiColor 89,101,619,363,"EBF5FB","-11|59|53B7FF,163|39|69E3FF,254|36|6CE3FF,256|-7|EBF5FB",0,0.9,intX,intY
+	If intX > -1 And intY > -1 Then
+		Tap 338, 1146
+		PrintLog "任务完成",true
+		随机延迟
+	End If
+
+End Function
+
+Function 战斗胜利
+    Dim intX,intY
+    FindMultiColor 0,0,0,0,"5CC28C","18|20|5BC18C,38|10|5BC18C,1|50|69C493,35|38|5BC18C",0,0.9,intX,intY
+    
+    If intX > -1 And intY > -1 Then
+       Tap intX,intY
+	ElseIf CmpColorEx("639|1151|F2F9FD,655|1156|585863,668|1174|7D768F,639|1172|585863,644|1184|7D768F,658|1193|7D768F",0.9) = 1 Then
+        Tap 365,1131
+    ' 天赋挑战胜利
+    ElseIf CmpColorEx("408|1204|F5FAFE,358|1178|0D90DD,504|1204|5A5A66,661|1197|C4E6F3,677|1193|D0F1FA,693|1198|C4E6F3",0.9) = 1 Then
+        Tap 518,1209
+    Else
+        PrintLog "战斗胜利", false
+        战斗胜利 = false
+        Exit Function
+    End If
+    PrintLog "战斗胜利",true
+    随机延迟 
+    战斗胜利 = true
+End Function
+
+Function 战斗失败
+
+End Function
+
+
+Function 切换天气
+
+    If CmpColorEx("358|334|FAFAFA,632|577|5CB9DD,309|981|9E6347,307|1007|F1FAFF,538|1011|6EC8D8",0.9) = 1 Then
+        Tap 383,998
+		PrintLog "切换天气",true
+		随机延迟
+    Else
+        PrintLog "切换天气",false
+    End If
+ 
+End Function
+
+
+
+Dim lastTime = 0
+
+Function 移动角色位置
+
+
+    If 检测静止页面() Then 
+    	//移动角色位置
+    	If CmpColorEx("359|932|B7C0C4,299|992|B7C0C4,360|1052|B2BBBF,420|992|B7C0C4,360|967|B7C0C4,360|1018|B7C0C4,358|989|B5BFC4",0.9) = 1 Then
+			Tap 361, 987
+			PrintLog "移动角色", True
+			随机延迟
+		Else
+			PrintLog "移动角色",False
+		End If
+    End If
+
+End Function
+
+
+Dim lastColor = GetPixelColor(0, 0)
+Dim lastStaticTime = Time()
+Function 检测静止页面
+
+	Dim currentTime = Time()
+    If currentTime - lastStaticTime > 1 Then 
+    	lastStaticTime = currentTime
+    	Dim rColor = GetPixelColor(329,79)
+		If rColor = lastColor Then 
+			lastColor = rColor
+			检测静止页面 = true
+			PrintLog "检测静止页面", True
+			Exit Function
+		Else 
+			lastColor = rColor
+		End If
+		
+    End If
+    
+    检测静止页面 = false
+	PrintLog "检测静止页面",false
+
+End Function
+
+Function 检测其他界面
+	If 检测静止页面() Then 
+		//Tap 351, 1117
+		//PrintLog "点击空白", True
+		
+		
+		Dim intX,intY
+		//工会界面
+		FindMultiColor 8,1177,120,1277,"A3AFCF","-12|10|A3B0D0,18|8|A3B0D0,13|12|A3B0D0,0|20|A3AFCF",0,0.9,intX,intY
+
+		If intX > -1 And intY > -1 Then 
+			PrintLog "工会界面",true
+			Tap intX, intY
+			随机延迟
+		End If
+
+	End If
+End Function
+
+
+Function 判断是否主页
+	If CmpColorEx("45|1269|5B9B66,195|1232|DDE9EC,326|1217|8E9FA7,405|1208|DDE9EC,425|1237|94A8B2",0.98) = 1 Then
+		判断是否主页 = true
+	Else
+		判断是否主页 = false
+	End If
+End Function
+
+
+Function 返回主页
+    If 判断是否主页() Then
+       PrintLog "返回主页",false
+    Else
+        Dim intX,intY
+		FindMultiColor 8,1177,120,1277,"A3AFCF","-12|10|A3B0D0,18|8|A3B0D0,13|12|A3B0D0,0|20|A3AFCF",0,0.9,intX,intY
+		If intX > -1 And intY > -1 Then 
+			PrintLog "返回主页",true
+			Tap intX, intY
+			随机延迟
+		End If
+    End If
+End Function
+
+
+Function AutoTask
+    ' Do
+        点击自动寻路
+    ' Loop
+    点击勾按钮
+    识别长按按钮
+    识别点击对话 
+    跳过按钮
+    点击勾按钮     
+    点击交互按钮 
+    识别社交动作
+    点击战斗按钮
+    切换天气
+    任务完成 
+    移动角色位置 
+    
+End Function
+
+
+// ==========================================关卡挂机=============================================
+Function 点击关卡挂机按钮
+    返回主页
+
+    Tap 58,1223
+    PrintLog "点击关卡挂机按钮",True
+    随机延迟
+End Function
+
+Function 是挑战页面
+    If CmpColorEx("76|597|56955A,93|596|5AA466,132|602|E9EFF4,84|642|3B94DD,186|616|E9EFF4",0.9) = 1 Then
+        是挑战页面 = True
+        PrintLog "是挑战页面",True
+    ElseIf CmpColorEx("299|1230|323545,311|1218|585865,431|1223|A09DAB,415|1226|F3F9FD,402|1233|575764,443|1242|7E8090,368|1225|DFE6ED",0.9) = 1 Then
+        是挑战页面 = True
+        PrintLog "是挑战页面",True
+    Else
+        是挑战页面 = False
+    End If
+
+End Function
+
+Function 是阵容界面
+    ' 通关记录按钮识别
+    If CmpColorEx("194|1162|F4FAFD,186|1179|575764,196|1186|F4FAFD,202|1194|7E768D",0.9) = 1 Then
+        PrintLog("是阵容界面",True)
+        是阵容界面 = True
+    Else
+        是阵容界面 = False
+    End If
+End Function
+
+Function 是阵容推荐界面
+    If CmpColorEx("647|688|847F94,661|682|FFFFFF,660|691|FFFFFF,306|1028|5B9B66,367|1067|F1FAFF",0.9) = 1 Then
+        PrintLog "阵容推荐界面",True
+        是阵容推荐界面 = True
+    Else
+        是阵容推荐界面 = False
+    End If
+End Function
+
+Function 点击挑战按钮
+    dim num = 随机数(0,1)
+    If num = 0 Then
+        Tap 543, 1075
+        PrintLog("点击挑战按钮",True)
+    Else 
+        Tap 208, 1076
+        PrintLog("点击天赋挑战按钮",True)
+    End If    
+  
+    随机延迟
+End Function
+
+Function 采用推荐阵容
+    Do
+        ' 通关记录按钮识别
+        If 是阵容界面() Then
+            tap 198,1194
+            PrintLog "通关记录",True
+            
+            Dim i = 0
+            Do
+                Delay 500
+                PrintLog("识别阵容推荐界面中...",True)
+                
+                if 是阵容推荐界面() Then
+                    Exit Do
+                Else
+                    If 是阵容界面() Then
+                        tap 198,1194
+                        Delay 1000
+                    End If
+                End If
+
+                i = i + 1
+                if i > 100 Then
+                    PrintLog("识别阵容推荐界面失败!!!",True)
+                    Exit Function
+                End If
+            Loop
+
+            dim num = 随机数(0,3)
+            PrintLog("随机选择阵容"&num,true)
+            For num
+                tap 662,687
+                随机延迟
+            Next
+
+            Do
+                If  一键采用() Then
+                    Exit Do
+                End If
+            Loop
+            采用推荐阵容 = true
+            Exit Function
+        Else
+            PrintLog("未识别到通关记录...",True)
+        End If
+         采用推荐阵容 = false
+    Loop
+
+End Function
+
+  
+Function 一键采用
+  If CmpColorEx("246|1050|5B9B66,369|1030|5B9B66,516|1053|4FAF60,502|1103|66B24F,391|1068|F1FAFF",0.9) = 1 Then
+        tap 246,1050
+        PrintLog "一键采用",True
+        随机延迟
+
+        点击勾按钮
+        一键采用 = true
+    Else
+        一键采用 = false
+    End If
+End Function
+
+
+Function 采用推荐阵容战斗
+    Do
+        If  采用推荐阵容() Then
+            点击战斗按钮
+            Exit Do
+        End If
+    Loop
+End Function
+
+
+Function AutoLevel
+    随机延迟
+    if 是挑战页面() Then
+        点击挑战按钮
+        采用推荐阵容战斗()
+    ElseIf 是阵容界面() Then
+        采用推荐阵容战斗
+    Else
+        点击关卡挂机按钮
+    End If
+End Function
+
+
+Do 
+
+
+    ' dim type = ReadUIConfig("自动功能列表")
+    ' If type = 0 then
+    '     ShowMessage "开始自动任务......"
+    '     AutoTask
+    ' ElseIf type = 1 then
+    '     ShowMessage "开始挑战关卡挂机(包括天赋)......"
+    '     AutoLevel
+    ' ElseIf type = 2 then
+    '     ShowMessage "开始天赋挑战关卡挂机......"
+    ' End If
+
+'   dim a = ReadUIConfig("自动功能列表","100")
+'  TracePrint a
+   AutoTask 
+'    AutoLevel
+'    读取UI配置
+'    通关记录
+Loop
+
